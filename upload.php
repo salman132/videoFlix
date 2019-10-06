@@ -1,14 +1,32 @@
-<?php require_once("includes/header.php"); ?>
-
 <?php
-	if(!empty($session->msg)){
+ require_once("includes/header.php"); 
+ if(!$session->is_signed_in()){
+ 	redirect("login.php");
+ 	exit();
+ }
+
+
+
+if(!empty($session->msg)){
 		echo "<script>
 				toastr.success('{$session->msg}');
 			</script>";
-	}
 
 
-?>
+}
+
+
+
+ ?>
+
+
+
+	
+
+
+
+
+
 
 <div class="column">
 	<form action='<?php echo htmlspecialchars("processing.php")?>' method='post' enctype='multipart/form-data'>
@@ -37,15 +55,14 @@
 	        <select name="category" id="categories" class="form-control">
 	         	<?php
 	         	
-	         		$sql = $db->connection->prepare("SELECT *FROM categories");
+	         		$categories = Category::find_all();
 
-	         		$sql->execute();
-
-	         		while ($row = $sql->fetch(PDO::FETCH_ASSOC)) {
+	         		foreach ($categories as $category) {
+	         		
 	         		
 	         		?>
 	         	
-						<option value="<?php echo $row['id']; ?>"><?php  echo $row['name']  ?></option>
+						<option value="<?php echo $category->id; ?>"><?php  echo  $category->name;  ?></option>
 
 	         	<?php } ?>
 	        </select>
@@ -56,6 +73,8 @@
 	    </div>
 	</form>
 
+	
+
 </div>
 
 
@@ -65,4 +84,7 @@
 
 
 <?php require_once("includes/footer.php"); ?>
+
+
+
                 

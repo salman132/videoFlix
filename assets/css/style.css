@@ -132,3 +132,21 @@ a:hover {
     padding: 20px;
     box-shadow: rgba(0, 0, 0, 0.1) 0 1px 2px;
 }
+.my-box{
+    width:40%;
+    margin-left: 24%;
+    margin-top:10%;
+    padding: 5px 10px;
+    background-color: #FAFAFA;
+    border: 1px solid #F0F0F0;
+    border-style: border-box;
+    box-shadow: 13px solid #FFFFFF;
+    overflow: hidden;
+}
+.form-box{
+    padding: 10px 0;
+}
+.form-box form input[type='submit']{
+    float: right;
+    text-transform: capitalize;
+}

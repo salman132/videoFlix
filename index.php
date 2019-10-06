@@ -2,8 +2,7 @@
 
 
 hello 
-
-
+<?php echo $_SESSION['user_id'];  ?>
 
 
 <?php require_once("includes/footer.php"); ?>

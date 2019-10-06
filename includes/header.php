@@ -2,6 +2,7 @@
 
 require_once('init.php');
 
+
 ?>
 
 <!DOCTYPE html>
@@ -43,9 +44,18 @@ require_once('init.php');
             </div>
 
             <div class="rightIcons">
+                 <?php
+                    if(isset($_SESSION['user_id'])){
+                        $user = User::findById($_SESSION['user_id']);
+
+                        echo $user->email;
+                    }
+
+                ?>
                 <a href="upload.php">
                     <img class="upload" src="assets/images/icons/upload.png">
                 </a>
+          
                 <a href="#">
                     <img class="upload" src="assets/images/profilePictures/default.png">
                 </a>

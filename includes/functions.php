@@ -1,9 +1,11 @@
 <?php
 
 
+
+
 function cleanInput($input){
-	trim($input);
-	htmlspecialchars($input);
+	
+	$input = htmlspecialchars($input);
 
 	return $input;
 }
@@ -11,6 +13,12 @@ function cleanInput($input){
 
 function redirect($string){
 	header("location: {$string}");
+}
+
+function bcrypt($pass){
+	$string = sha1("1>Az@?<zP*)^!");
+
+	return sha1(md5($pass.$string));
 }
 
 
