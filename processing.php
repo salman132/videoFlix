@@ -5,6 +5,8 @@ require_once('includes/header.php');
 if(isset($_POST['upload'])){
 
 	// $videoUploadData = new videoUploadData();
+	// print_r($_FILES['video']);
+	// die();
 	
 	$videoUploadData->upload($_FILES['video']);
 	$videoUploadData->uploadBy = $_SESSION['user_id'];
@@ -24,7 +26,7 @@ if(isset($_POST['upload'])){
 	redirect('upload.php');
 
 
-	$videoUploadData->category = (int)$_POST['category'];
+	
 	
 
 	

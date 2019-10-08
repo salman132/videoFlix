@@ -12,30 +12,35 @@ class videoUploadData extends DB_Object{
 	public $category;
 	public $uploadedBy;
 	public $filePath;
-	public $filetype;
+
+	public $finalPath;
+	
+
+	public $targetDir ='uploads/videos/';
+	public $tempPath;
 	private $MaxFilesize = 500000000;
 	public $msg;
-	private $ffmpegPath = SITE_ROOT."ffmpeg/bin/ffmpeg.exe";
+	private $ffmpegPath = SITE_ROOT."/ffmpeg/bin/ffmpeg.exe";
 
-	private static $allowedTypes = array('video/mp4','video/wmv','video/flv','video/avi','video/3gp','video/webm','video/mkv','video/vob','video/mpeg','video/mpg','video/ogv','video/ogg');
+	private static $allowedTypes = array('video/mp4','video/wmv','video/flv','video/avi','video/3gp','video/webm','video/x-matroska','video/vob','video/mpeg','video/mpg','video/ogv','video/ogg');
 
 
 	public function upload($files){
-		$targetDir = 'uploads/videos/';
-
-		$tempPath = $targetDir.time().basename($files['name']);
-
-		$tempPath = str_replace(" ", "_", $tempPath);
 		
-		$this->filePath = $tempPath;
 
-		return $validData = $this->processData($files,$tempPath);
+		$this->tempPath = $this->targetDir.time().basename($files['name']);
+
+		$this->tempPath = str_replace(" ", "_", $this->tempPath);
+		
+
+
+		return $validData = $this->processData($files,$this->tempPath);
 
 		
 
 	}
 	public function getVideoPath(){
-		return $this->filePath;
+		return $this->tempPath;
 	}
 
 	private function processData($files,$tempPath){
@@ -43,13 +48,21 @@ class videoUploadData extends DB_Object{
 
 		if($this->isvalidSize($files) && 
 			$this->isValidType($files['type']) && 
-			$this->hasNoError($files['error']) &&
-			$this->isMp4($files['type'])
+			$this->hasNoError($files['error'])
+			
 		){
 
 			if(move_uploaded_file($files['tmp_name'],$tempPath)){
 				$this->msg = "Your Video Uploaded Successfully";
-				return true;
+
+				if($files['type'] == 'video/mp4'){
+					return true;
+				}
+				else{
+					$this->isMp4($files);
+					$this->filePath = $this->finalPath;
+					return true;
+				}
 			}
 			else{
 				$this->msg="Something Went Wrong.Upload again";
@@ -88,7 +101,7 @@ class videoUploadData extends DB_Object{
 			$types = implode(",", static::$allowedTypes);
 			$type = str_replace("/",".", $types);
 
-			echo "The video format must be any of this Example".$type;
+			echo "The video format must be any of this ".$type;
 
 			return false;
 		}
@@ -108,7 +121,10 @@ class videoUploadData extends DB_Object{
 
 	public function convertVideo($tempPath,$finalPath){
 		
-		$cmd = "{$this->ffmpegPath} -i {$tempPath} {$finalPath} 2>&1"; 
+		$cmd = "$this->ffmpegPath -i $tempPath $finalPath 2>&1"; 
+		
+		
+
 
 		$outputLog = array();
 
@@ -124,8 +140,13 @@ class videoUploadData extends DB_Object{
 
 	}
 
-	private function isMp4($file){
-		if($file ='video/mp4'){
+	public function isMp4($file){
+		if($file['type'] == 'video/mp4'){
+			return true;
+		}
+		else{
+			$this->finalPath = $this->targetDir.time().".mp4";
+			$this->convertVideo($this->tempPath,$this->finalPath);
 			
 		}
 	}
