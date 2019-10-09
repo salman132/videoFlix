@@ -22,7 +22,7 @@ class videoUploadData extends DB_Object{
 	public $msg;
 	private $ffmpegPath = SITE_ROOT."/ffmpeg/bin/ffmpeg.exe";
 
-	private static $allowedTypes = array('video/mp4','video/wmv','video/flv','video/avi','video/3gp','video/webm','video/x-matroska','video/vob','video/mpeg','video/mpg','video/ogv','video/ogg');
+	private static $allowedTypes = array('video/mp4','video/x-ms-wmv','video/flv','video/avi','video/3gp','video/webm','video/x-matroska','video/vob','video/mpeg','video/mpg','video/ogv','video/ogg');
 
 
 	public function upload($files){
@@ -39,9 +39,7 @@ class videoUploadData extends DB_Object{
 		
 
 	}
-	public function getVideoPath(){
-		return $this->tempPath;
-	}
+	
 
 	private function processData($files,$tempPath){
 		$videoType = pathinfo($tempPath,PATHINFO_EXTENSION);
@@ -61,9 +59,11 @@ class videoUploadData extends DB_Object{
 				else{
 					$this->isMp4($files);
 					$this->filePath = $this->finalPath;
+					unlink($tempPath);
 					return true;
 				}
 			}
+
 			else{
 				$this->msg="Something Went Wrong.Upload again";
 				return false;
@@ -147,6 +147,7 @@ class videoUploadData extends DB_Object{
 		else{
 			$this->finalPath = $this->targetDir.time().".mp4";
 			$this->convertVideo($this->tempPath,$this->finalPath);
+			$this->tempPath = $this->finalPath;
 			
 		}
 	}

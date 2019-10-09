@@ -10,7 +10,7 @@ if(isset($_POST['upload'])){
 	
 	$videoUploadData->upload($_FILES['video']);
 	$videoUploadData->uploadBy = $_SESSION['user_id'];
-	$videoUploadData->filePath = $videoUploadData->getVideoPath();;
+	$videoUploadData->filePath = $videoUploadData->tempPath;
 	$videoUploadData->title = cleanInput($_POST['title']);
 	$videoUploadData->description = cleanInput($_POST['description']) ? : 1;
 	$videoUploadData->privacy = cleanInput((int)$_POST['privacy']) ? : 1;
